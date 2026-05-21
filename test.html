@@ -115,7 +115,12 @@
                         paragraphLoop: true,
                         linebreaks: true,
                     });
-
+                    // 1. กำหนดสัญลักษณ์ (สามารถก๊อปปี้สัญลักษณ์ 2 ตัวนี้ไปใส่ในโค้ดได้เลย)
+                    const CHECKED = "☑";   // กล่องติ๊กถูก
+                    const UNCHECKED = "☐"; // กล่องเปล่า
+                    
+                    // 2. สมมติว่าดึงค่ามาจากฟอร์ม (ตัวอย่าง: ผู้ใช้เลือก "ผู้ปกครองมาส่ง")
+                    const travelMethod = "parent"; // สมมติค่าเป็น walk, parent, หรือ bus
                     // 3. ดึงข้อมูลจากฟอร์มมาเตรียมไว้
                     const templateData = {
                         target_school: document.getElementById("target_school").value,
@@ -124,6 +129,12 @@
                         student_name: document.getElementById("student_name").value,
                         class_level: document.getElementById("class_level").value,
                         citizen_id: document.getElementById("citizen_id").value,
+                        // ถ้า travelMethod เท่ากับ 'walk' ให้เป็น CHECKED ถ้าไม่ใช่ให้เป็น UNCHECKED
+                        chk_walk: travelMethod === "walk" ? CHECKED : UNCHECKED,
+                        // ถ้า travelMethod เท่ากับ 'parent' ให้เป็น CHECKED ถ้าไม่ใช่ให้เป็น UNCHECKED
+                        chk_parent: travelMethod === "parent" ? CHECKED : UNCHECKED,
+                        // ถ้า travelMethod เท่ากับ 'bus' ให้เป็น CHECKED ถ้าไม่ใช่ให้เป็น UNCHECKED
+                        chk_bus: travelMethod === "bus" ? CHECKED : UNCHECKED,
                     };
 
                     // 4. สั่งแทนที่คำ (Render)
