@@ -1334,6 +1334,26 @@
             </svg>
             บันทึกเป็นจดหมายส่งตัว (Word)
           </button>
+          <button
+            id="downloadEnvelopeBtn"
+            onclick="downloadEnvelopeWord()"
+            class="bg-fuchsia-600 text-white px-6 py-3 rounded-xl hover:bg-fuchsia-700 w-full font-semibold transition-colors shadow-md flex items-center justify-center gap-2"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              ></path>
+            </svg>
+            บันทึกใบปะหน้าซองจดหมาย (Word)
+          </button>
 
           <button
             id="viewPdfBtn"
@@ -2142,19 +2162,19 @@
                 </td>
                 <td class="block sm:table-cell sm:p-3 sm:border-b border-gray-100 mb-2 sm:mb-0">
                     <label class="block sm:hidden text-xs font-semibold text-gray-500 mb-1">ชื่อ-สกุล</label>
-                    <input type="text" class="form-input bg-gray-50 text-sm py-2 s-name shadow-none border-transparent text-gray-600 focus:ring-0" readonly placeholder="-">
+                    <input type="text" class="form-input bg-gray-50 text-sm py-2 s-name shadow-none border-transparent text-gray-600 focus:ring-0" placeholder="-">
                 </td>
                 <td class="block sm:table-cell sm:p-3 sm:border-b border-gray-100 mb-2 sm:mb-0">
                     <label class="block sm:hidden text-xs font-semibold text-gray-500 mb-1">ระดับชั้น</label>
-                    <input type="text" class="form-input bg-gray-50 text-sm py-2 s-class shadow-none border-transparent text-gray-600 focus:ring-0" readonly placeholder="-">
+                    <input type="text" class="form-input bg-gray-50 text-sm py-2 s-class shadow-none border-transparent text-gray-600 focus:ring-0" placeholder="-">
                 </td>
                 <td class="block sm:table-cell sm:p-3 sm:border-b border-gray-100 mb-2 sm:mb-0">
                     <label class="block sm:hidden text-xs font-semibold text-gray-500 mb-1">เลขประจำตัวประชาชน</label>
-                    <input type="text" class="form-input bg-gray-50 text-sm py-2 s-citizen shadow-none border-transparent text-gray-600 focus:ring-0" readonly placeholder="-">
+                    <input type="text" class="form-input bg-gray-50 text-sm py-2 s-citizen shadow-none border-transparent text-gray-600 focus:ring-0" placeholder="-">
                 </td>
                 <td class="block sm:table-cell sm:p-3 sm:border-b border-gray-100 mb-4 sm:mb-0">
                     <label class="block sm:hidden text-xs font-semibold text-gray-500 mb-1">วันเกิด</label>
-                    <input type="text" class="form-input bg-gray-50 text-sm py-2 s-birth shadow-none border-transparent text-gray-600 focus:ring-0" readonly placeholder="-">
+                    <input type="text" class="form-input bg-gray-50 text-sm py-2 s-birth shadow-none border-transparent text-gray-600 focus:ring-0" placeholder="-">
                 </td>
                 <td class="block sm:table-cell sm:p-3 sm:border-b border-gray-100 text-right sm:text-center absolute top-4 right-4 sm:relative sm:top-auto sm:right-auto">
                     <button class="text-gray-400 hover:text-red-500 p-2 sm:p-2 rounded-full sm:hover:bg-red-50 transition-colors row-remove-btn sm:opacity-0 sm:group-hover:opacity-100" onclick="removeRow(this)" title="ลบรายการนี้">
@@ -2292,7 +2312,7 @@
         return true;
       }
 
-async function submitForm() {
+      async function submitForm() {
         let isValid = true;
 
         if (!validateInput("guardian_name")) isValid = false;
@@ -2348,11 +2368,11 @@ async function submitForm() {
             .getElementById("signature-container")
             .classList.add("border-red-500", "ring-1", "ring-red-500");
           document.getElementById("err_signature").classList.remove("hidden");
-          
+
           // ตรวจสอบว่ามี element info_signature หรือไม่ก่อนจะซ่อน
           const infoSig = document.getElementById("info_signature");
-          if(infoSig) infoSig.classList.add("hidden");
-          
+          if (infoSig) infoSig.classList.add("hidden");
+
           isValid = false;
         }
 
@@ -2416,8 +2436,10 @@ async function submitForm() {
             { item: "ภาพถ่ายหน้าตรง ขนาด 1.5 นิ้ว", qty: "2", unit: "รูป" },
           ],
           // ถ้ากระดานว่างให้ส่ง null (แปลว่าไม่เซ็นใหม่) ถ้ามีให้แปลงรูป Base64
-          signature_base64: signaturePad.isEmpty() ? null : signaturePad.toDataURL("image/png"),
-          existing_signature: existingSignatureUrl
+          signature_base64: signaturePad.isEmpty()
+            ? null
+            : signaturePad.toDataURL("image/png"),
+          existing_signature: existingSignatureUrl,
         };
 
         const payload = {
@@ -2446,7 +2468,7 @@ async function submitForm() {
           students: students,
           attachments: lastFormData.attachments,
           signature_base64: lastFormData.signature_base64,
-          existing_signature: lastFormData.existing_signature
+          existing_signature: lastFormData.existing_signature,
         };
 
         try {
@@ -3022,6 +3044,7 @@ async function submitForm() {
             VerticalPositionRelativeFrom,
             VerticalPositionAlign,
             TextWrappingType,
+            LineRuleType,
             Footer,
           } = docx;
 
@@ -3079,7 +3102,7 @@ async function submitForm() {
           const newAddress = `บ้านเลขที่ ${toThaiNum(lastFormData.new_addr_no)} หมู่ที่ ${toThaiNum(lastFormData.new_addr_moo || "-")} ${getDistPrefix(lastFormData.new_addr_prov)}${lastFormData.new_addr_subdist} ${getAmpPrefix(lastFormData.new_addr_prov)}${lastFormData.new_addr_dist} จังหวัด${lastFormData.new_addr_prov} ${toThaiNum(lastFormData.new_addr_zip)}`;
 
           // ตั้งค่าตัวแปรฟอนต์และระยะแท็บ
-          const fontName = "TH Sarabun PSK";
+          const fontName = "TH SarabunPSK";
           const fontSize = 32;
           const centerTab = convertMillimetersToTwip(80);
           const indentFirst = convertMillimetersToTwip(25);
@@ -3137,7 +3160,11 @@ async function submitForm() {
 
             studentParagraphs.push(
               new Paragraph({
-                spacing: { before: 120, line: 220 },
+                spacing: {
+                  before: 120, // ระยะก่อนย่อหน้า (6 pt)
+                  line: 240, // 240 Twips = ระยะปกติ 1.0
+                  lineRule: LineRuleType.AUTO,
+                },
                 indent: {
                   firstLine:
                     lastFormData.students.length > 1
@@ -3196,7 +3223,7 @@ async function submitForm() {
                         ? [
                             new ImageRun({
                               data: garudaImageBuffer,
-                              transformation: { width: 114, height: 114 },
+                              transformation: { width: 114, height: 132 },
                               floating: {
                                 horizontalPosition: {
                                   relative: HorizontalPositionRelativeFrom.PAGE,
@@ -3213,7 +3240,7 @@ async function submitForm() {
                           ]
                         : []),
                       t(
-                        `ที่ ศธ ๐๔๑๕๖.๐๐๕/${toThaiNum(lastFormData.doc_no.split("-")[1])}`,
+                        `ที่ ศธ ๐๔๑๕๖.๐๐๕/`,
                       ),
                       new TextRun({
                         text: "\tโรงเรียนชุมชนวัดไทยงาม",
@@ -3237,20 +3264,27 @@ async function submitForm() {
                   }),
                   new Paragraph({
                     children: [t("เรื่อง  ส่งนักเรียนขอย้ายเข้ามาเรียน")],
+                    spacing: { before: 120, after: 120 },
                   }),
                   new Paragraph({
                     children: [t(`เรียน  ผู้อำนวยการ${destinationSchool}`)],
+                    spacing: { before: 120, after: 120 },
                   }),
                   new Paragraph({
+                    spacing: { before: 120, after: 120 },
                     children: [
                       t(
-                        "สิ่งที่ส่งมาด้วย  สมุดรายงานประจำตัวนักเรียน (อบ.๑) จำนวน ๑ ฉบับ",
+                        "สิ่งที่ส่งมาด้วย  ปพ.๑ ระเบียนแสดงผลการเรียน				                  จำนวน ๑ ฉบับ",
                       ),
                     ],
                   }),
 
                   new Paragraph({
-                    spacing: { before: 120, line: 220 },
+                    spacing: {
+                      before: 120, // ระยะก่อนย่อหน้า (6 pt)
+                      line: 240, // 240 Twips = ระยะปกติ 1.0
+                      lineRule: LineRuleType.AUTO,
+                    },
                     indent: { firstLine: indentFirst },
                     alignment: AlignmentType.THAI_DISTRIBUTE,
                     children: [
@@ -3263,7 +3297,11 @@ async function submitForm() {
                   ...studentParagraphs,
 
                   new Paragraph({
-                    spacing: { before: 120, line: 220 },
+                    spacing: {
+                      before: 120, // ระยะก่อนย่อหน้า (6 pt)
+                      line: 240, // 240 Twips = ระยะปกติ 1.0
+                      lineRule: LineRuleType.AUTO,
+                    },
                     indent: { firstLine: indentFirst },
                     alignment: AlignmentType.THAI_DISTRIBUTE,
                     children: [
@@ -3287,7 +3325,7 @@ async function submitForm() {
                     children: [t("\tขอแสดงความนับถือ")],
                   }),
                   new Paragraph({
-                    spacing: { before: 720 },
+                    spacing: { before: 1000 },
                     tabStops: [
                       { type: TabStopType.CENTER, position: signatureCenter },
                     ],
@@ -3301,7 +3339,7 @@ async function submitForm() {
                   }),
 
                   new Paragraph({
-                    spacing: { before: 720 },
+                    spacing: { before: convertMillimetersToTwip(30) },
                     children: [t("งานทะเบียนวัดผล โรงเรียนชุมชนวัดไทยงาม")],
                   }),
                   new Paragraph({ children: [t("โทร. ๐๖๑-๑๕๓-๕๖๕๓")] }),
@@ -3320,6 +3358,165 @@ async function submitForm() {
             .catch((err) => {
               console.error("Error generating document:", err);
               showToast("เกิดข้อผิดพลาดในการสร้างไฟล์เอกสาร", "error");
+            });
+        } catch (err) {
+          console.error(err);
+          showToast("เกิดข้อผิดพลาด กรุณาลองใหม่", "error");
+        } finally {
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+        }
+      }
+
+      // ==========================================
+      // ฟังก์ชันสร้าง Word Document สำหรับใบปะหน้าซองจดหมาย
+      // ==========================================
+      async function downloadEnvelopeWord() {
+        if (!lastFormData) {
+          showToast("ไม่พบข้อมูล กรุณาส่งฟอร์มใหม่", "error");
+          return;
+        }
+
+        const btn = document.getElementById("downloadEnvelopeBtn");
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = "กำลังสร้างไฟล์ใบปะหน้าซอง...";
+        btn.disabled = true;
+
+        try {
+          const {
+            Document,
+            Packer,
+            Paragraph,
+            TextRun,
+            convertMillimetersToTwip,
+            PageOrientation,
+          } = docx;
+
+          // ฟังก์ชันแปลงเลขไทย
+          const thaiNumerals = [
+            "๐",
+            "๑",
+            "๒",
+            "๓",
+            "๔",
+            "๕",
+            "๖",
+            "๗",
+            "๘",
+            "๙",
+          ];
+          const toThaiNum = (num) =>
+            num
+              ? num
+                  .toString()
+                  .split("")
+                  .map((c) => (/[0-9]/.test(c) ? thaiNumerals[parseInt(c)] : c))
+                  .join("")
+              : "";
+
+          // จัดเตรียมที่อยู่ผู้รับปลายทาง
+          const isBKK = (prov) => prov && prov.includes("กรุงเทพ");
+          const getDistPrefix = (prov) => (isBKK(prov) ? "แขวง" : "ตำบล");
+          const getAmpPrefix = (prov) => (isBKK(prov) ? "เขต" : "อำเภอ");
+
+          const destinationSchool = `โรงเรียน${lastFormData.target_school || ""}`;
+
+          // แบ่งที่อยู่ผู้รับเป็น 3 บรรทัดตามคำขอ
+          const addrLine1 = `เลขที่ ${toThaiNum(lastFormData.sch_addr_no)}`;
+          const addrLine2 = `${getDistPrefix(lastFormData.sch_addr_prov)}${lastFormData.sch_addr_subdist} ${getAmpPrefix(lastFormData.sch_addr_prov)}${lastFormData.sch_addr_dist}`;
+          const addrLine3 = `จังหวัด${lastFormData.sch_addr_prov} ${toThaiNum(lastFormData.sch_addr_zip)}`;
+
+          const fontName = "TH SarabunPSK";
+          const t = (text, size = 32, bold = false) =>
+            new TextRun({
+              text,
+              font: fontName,
+              size,
+              bold,
+              language: { value: "th-TH" },
+            });
+
+          // สร้างเอกสารใหม่ (กระดาษ A4 แนวนอน)
+          const doc = new Document({
+            creator: "ระบบสารบรรณ",
+            title: "ใบปะหน้าซองจดหมาย",
+            sections: [
+              {
+                properties: {
+                  page: {
+                    size: { orientation: PageOrientation.LANDSCAPE },
+                    margin: {
+                      top: convertMillimetersToTwip(20),
+                      right: convertMillimetersToTwip(20),
+                      bottom: convertMillimetersToTwip(20),
+                      left: convertMillimetersToTwip(20),
+                    },
+                  },
+                },
+                children: [
+                  // --- ส่วนผู้ส่ง (มุมบนซ้าย) ---
+                  new Paragraph({
+                    spacing: { line: 280 },
+                    children: [t("ผู้ส่ง  โรงเรียนชุมชนวัดไทยงาม", 32, true)],
+                  }),
+                  new Paragraph({
+                    spacing: { line: 280 },
+                    indent: { left: convertMillimetersToTwip(12) },
+                    children: [t("หมู่ ๒ ตำบลโคกแย้", 32)],
+                  }),
+                  new Paragraph({
+                    spacing: { line: 280 },
+                    indent: { left: convertMillimetersToTwip(12) },
+                    children: [t("อำเภอหนองแค จังหวัดสระบุรี ๑๘๒๓๐", 32)],
+                  }),
+
+                  // --- ส่วนผู้รับ (ตรงกลางหน้ากระดาษแนวนอน) ---
+                  // ใช้ Indent ดันข้อความไปทางขวา 120 มม. และเว้นระยะจากด้านบน 50 มม.
+                  new Paragraph({
+                    spacing: {
+                      before: convertMillimetersToTwip(50),
+                      line: 360,
+                    },
+                    indent: { left: convertMillimetersToTwip(120) },
+                    children: [
+                      t(`เรียน  ผู้อำนวยการ${destinationSchool}`, 40, true),
+                    ], // ขนาด 20pt
+                  }),
+                  new Paragraph({
+                    spacing: { line: 360 },
+                    indent: { left: convertMillimetersToTwip(135) },
+                    children: [t(`${destinationSchool}`, 40, true)],
+                  }),
+                  new Paragraph({
+                    spacing: { line: 360 },
+                    indent: { left: convertMillimetersToTwip(135) },
+                    children: [t(addrLine1, 40)],
+                  }),
+                  new Paragraph({
+                    spacing: { line: 360 },
+                    indent: { left: convertMillimetersToTwip(135) },
+                    children: [t(addrLine2, 40)],
+                  }),
+                  new Paragraph({
+                    spacing: { line: 360 },
+                    indent: { left: convertMillimetersToTwip(135) },
+                    children: [t(addrLine3, 40)],
+                  }),
+                ],
+              },
+            ],
+          });
+
+          Packer.toBlob(doc)
+            .then((blob) => {
+              saveAs(
+                blob,
+                `ใบปะหน้าซอง_${lastFormData.target_school.replace(/\s+/g, "_")}.docx`,
+              );
+            })
+            .catch((err) => {
+              console.error("Error generating envelope:", err);
+              showToast("เกิดข้อผิดพลาดในการสร้างไฟล์ใบปะหน้า", "error");
             });
         } catch (err) {
           console.error(err);
