@@ -3226,7 +3226,7 @@
                               transformation: { width: 114, height: 132 },
                               floating: {
                                 horizontalPosition: {
-                                  relative: HorizontalPositionRelativeFrom.PAGE,
+                                  relative: HorizontalPositionRelativeFrom.MARGIN, // เปลี่ยนจาก PAGE เป็น MARGIN
                                   align: HorizontalPositionAlign.CENTER,
                                 },
                                 verticalPosition: {
@@ -3235,7 +3235,8 @@
                                 },
                                 wrap: { type: TextWrappingType.NONE },
                                 behindText: true,
-                              },
+                                allowOverlap: true, // เพิ่ม properties นี้เพื่อให้ลอยทับได้อย่างอิสระ
+                              }
                             }),
                           ]
                         : []),
